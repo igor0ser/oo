@@ -1,0 +1,13 @@
+{
+  "name": "ToDo app using framework O",
+  "version": "0.0.2",
+  "description": "JS Menthoring Homework",
+  "authors": [
+    "Igor Sergiienko"
+  ],
+  "license": "O",
+  "dependencies": {
+    "handlebars": "latest",
+    "bootstrap-css-only": "latest"
+  }
+}

@@ -1,0 +1,16 @@
+{
+  "name": "O",
+  "version": "0.0.2",
+  "description": "JS Menthoring Homework",
+  "author": "Igor Sergiienko",
+  "license": "O",
+  "dependencies": {
+    "gulp": "^3.9.0",
+    "gulp-concat": "^2.6.0",
+    "gulp-jshint": "^1.11.2",
+    "gulp-load-plugins": "^1.0.0",
+    "gulp-sourcemaps": "^1.5.2",
+    "gulp-webserver": "^0.9.1",
+    "gulp-babel": "^5.1.0"
+  }
+}
