@@ -48,3 +48,47 @@ gulp.task('watch', function() {
 
 // The default task is 'watch'
 gulp.task('default', ['watch', 'webserver', 'concat']);
+
+//ESLINT WILL BE HERE
+var eslint = require('gulp-eslint');
+
+
+var options = {
+	'envs': [
+		{'es6': true}
+	]
+}
+
+gulp.task('lint', function(){
+	return gulp.src(['app/resources/**/*.js', 'app/framework/own-framework.js'])
+		.pipe(eslint(options))
+		.pipe(eslint.result(function (result) {
+			// Called for each ESLint result. 
+			console.log('ESLint result: ' + result.filePath);
+			console.log('# Messages: ' + result.messages.length);
+			for (var i = 0; i < result.messages.length; i++) {
+				console.log('# Message ' + ( i + 1 ) + ': ' + result.messages[i].message + ' on line ' + 
+					result.messages[i].line);
+			};
+			console.log('# Warnings: ' + result.warningCount);
+			console.log('# Errors: ' + result.errorCount);
+			//callback(result.error);
+		}));
+})
+
+
+function callback(e){
+	console.log('error===' + e);
+}
+
+
+
+
+
+
+
+
+
+
+
+

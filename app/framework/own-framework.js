@@ -7,7 +7,7 @@
 
 	//private list of modules
 	var modules = [];
-
+	
 	//faking private field in Module using ES6 Symbols
 	var componentSymbol = Symbol('components');
 
