@@ -3,31 +3,53 @@ var plug = require('gulp-load-plugins')();
 var path = require('path');
 var concat = require('gulp-concat');
 var babel = require('gulp-babel');
+var eslint = require('gulp-eslint');
 
 // paths
 var paths = {
 	localhost: 'http://localhost:8000/index.html',
 	framework: 'app/framework/own-framework.js',
-	app: 'app/resources/**/*.js'
+	app: 'app/resources/**/*.js',
+	handlebars: 'app/vendors/handlebars/handlebars.js',
+	babelized: 'app/dist/babelized.js',
+	dist: 'app/dist'
 };
 
-gulp.task('babel', function() {
-	return gulp.src([
-		'app/framework/own-framework.js',
-		'app/resources/**/*.js'
-		])
+// es lint
+// turn on es6 on linter
+var options = {
+	'env': {
+		'es6': true
+	}
+};
+
+gulp.task('lint', function(){
+	return gulp.src([paths.app, paths.framework])
+		.pipe(eslint(options))
+		.pipe(eslint.result(function (result) {
+			// Called for each ESLint result. 
+			if (result.messages.length > 0){
+				for (var i = 0; i < result.messages.length; i++) {
+					var mes = '# ESLint message! ' + result.filePath + ' on line ' + 
+						result.messages[i].line + ': \n 	' + result.messages[i].message;
+					console.log(mes);
+				};
+			}
+		}))
+		.pipe(eslint.failAfterError());
+})
+
+gulp.task('babel', ['lint'], function() {
+	return gulp.src([ paths.framework, paths.app ])
 		.pipe(concat('babelized.js'))
 		.pipe(babel())
-		.pipe(gulp.dest('app/dist'));
+		.pipe(gulp.dest(paths.dist));
 });
 
 gulp.task('concat', ['babel'], function() {
-	return gulp.src([
-		'app/vendors/handlebars/handlebars.js',
-		'app/dist/babelized.js'
-		])
+	return gulp.src([ paths.handlebars, paths.babelized ])
 		.pipe(concat('app.js'))
-		.pipe(gulp.dest('app/dist'));
+		.pipe(gulp.dest(paths.dist));
 });
 
 // WebServer
@@ -47,39 +69,10 @@ gulp.task('watch', function() {
 });
 
 // The default task is 'watch'
-gulp.task('default', ['watch', 'webserver', 'concat']);
-
-//ESLINT WILL BE HERE
-var eslint = require('gulp-eslint');
+gulp.task('default', ['concat', 'webserver', 'watch']);
 
 
-var options = {
-	'envs': [
-		{'es6': true}
-	]
-}
 
-gulp.task('lint', function(){
-	return gulp.src(['app/resources/**/*.js', 'app/framework/own-framework.js'])
-		.pipe(eslint(options))
-		.pipe(eslint.result(function (result) {
-			// Called for each ESLint result. 
-			console.log('ESLint result: ' + result.filePath);
-			console.log('# Messages: ' + result.messages.length);
-			for (var i = 0; i < result.messages.length; i++) {
-				console.log('# Message ' + ( i + 1 ) + ': ' + result.messages[i].message + ' on line ' + 
-					result.messages[i].line);
-			};
-			console.log('# Warnings: ' + result.warningCount);
-			console.log('# Errors: ' + result.errorCount);
-			//callback(result.error);
-		}));
-})
-
-
-function callback(e){
-	console.log('error===' + e);
-}
 
 
 
