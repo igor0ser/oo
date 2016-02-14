@@ -73,6 +73,16 @@ gulp.task('default', ['concat', 'webserver', 'watch']);
 
 
 
+// tests
+var jasmine = require('gulp-jasmine');
+ 
+gulp.task('test', function () {
+	return gulp.src('tests/test.js')
+		// gulp-jasmine works on filepaths so you can't have any plugins before it 
+		.pipe(jasmine());
+});
+
+
 
 
 
