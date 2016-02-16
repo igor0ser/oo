@@ -1,25 +1,64 @@
+'use strict'
+
 var gulp = require('gulp');
-var plug = require('gulp-load-plugins')();
-var path = require('path');
 var concat = require('gulp-concat');
 var babel = require('gulp-babel');
 var eslint = require('gulp-eslint');
+var jasmineBrowser = require('gulp-jasmine-browser');
+var watch = require('gulp-watch');
+var webserver = require('gulp-webserver');
+var open = require('gulp-open');
 
 // paths
 var paths = {
 	localhost: 'http://localhost:8000/index.html',
+	testLocalhost: 'http://localhost:8888/',
 	framework: 'app/framework/own-framework.js',
 	app: 'app/resources/**/*.js',
 	handlebars: 'app/vendors/handlebars/handlebars.js',
+	symbolShim: 'app/vendors/es-symbol/dist/symbol.js',
+	babelPolyphill: 'app/vendors/babel-polyfill/browser-polyfill.js',
 	babelized: 'app/dist/babelized.js',
-	dist: 'app/dist'
+	dist: 'app/dist',
+	test: 'tests/*.js'
 };
 
-// es lint
-// turn on es6 on linter
+
+
+// tests
+ 
+gulp.task('jasmine', function() {
+	var filesForTest = [
+		paths.handlebars,
+		paths.framework,
+		paths.app,
+		paths.test
+	];
+	return gulp.src(filesForTest)
+		.pipe(watch(filesForTest))
+		.pipe(jasmineBrowser.specRunner())
+		.pipe(jasmineBrowser.server({port: 8888}))
+
+});
+
+gulp.task('open', function(){
+	var options = {
+		app: 'chrome',
+		uri: paths.testLocalhost
+	};
+	gulp.src('').pipe(open(options));
+});
+
+gulp.task('test', ['open', 'jasmine']);
+
+// default 
+
 var options = {
 	'env': {
 		'es6': true
+	},
+	'rules': {
+		'quote-props': [2, "as-needed"]
 	}
 };
 
@@ -47,20 +86,25 @@ gulp.task('babel', ['lint'], function() {
 });
 
 gulp.task('concat', ['babel'], function() {
-	return gulp.src([ paths.handlebars, paths.babelized ])
+	return gulp.src([
+			paths.handlebars,
+			paths.babelPolyphill,
+			paths.babelized
+		])
 		.pipe(concat('app.js'))
 		.pipe(gulp.dest(paths.dist));
 });
 
-// WebServer
 gulp.task('webserver', function() {
 	return gulp.src('app')
-		.pipe(plug.webserver({
+		.pipe(webserver({
 			livereload: true,
 			directoryListing: true,
 			open: paths.localhost
 		}));
 });
+
+
 
 // watch files, transpile if one of them changes
 gulp.task('watch', function() {
@@ -72,15 +116,6 @@ gulp.task('watch', function() {
 gulp.task('default', ['concat', 'webserver', 'watch']);
 
 
-
-// tests
-var jasmine = require('gulp-jasmine');
- 
-gulp.task('test', function () {
-	return gulp.src('tests/test.js')
-		// gulp-jasmine works on filepaths so you can't have any plugins before it 
-		.pipe(jasmine());
-});
 
 
 

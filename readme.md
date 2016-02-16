@@ -1,15 +1,22 @@
 To run SPA:
 
 1. install bower: 
+
 	> npm install -g bower
 
-2. install dependencies:
+2. install npm dependencies:
+
+	> npm install
+
+3. install bower dependencies:
 
 	> bower install
 
-3. Open index.html
+4. Start gulp
 
-4. Enjoy.
+	> gulp
+
+5. Enjoy.
 
 
 About

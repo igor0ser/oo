@@ -8,6 +8,8 @@
   "license": "O",
   "dependencies": {
     "handlebars": "latest",
-    "bootstrap-css-only": "latest"
+    "bootstrap-css-only": "latest",
+    "babel-polyfill": "latest",
+    "es-symbol": "latest"
   }
 }
