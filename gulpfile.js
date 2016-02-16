@@ -8,6 +8,7 @@ var jasmineBrowser = require('gulp-jasmine-browser');
 var watch = require('gulp-watch');
 var webserver = require('gulp-webserver');
 var open = require('gulp-open');
+var addsrc = require('gulp-add-src');
 
 // paths
 var paths = {
@@ -16,9 +17,8 @@ var paths = {
 	framework: 'app/framework/own-framework.js',
 	app: 'app/resources/**/*.js',
 	handlebars: 'app/vendors/handlebars/handlebars.js',
-	symbolShim: 'app/vendors/es-symbol/dist/symbol.js',
 	babelPolyphill: 'app/vendors/babel-polyfill/browser-polyfill.js',
-	babelized: 'app/dist/babelized.js',
+	matchesPolyphill: 'app/vendors/matches-selector/matches-selector.js',
 	dist: 'app/dist',
 	test: 'tests/*.js'
 };
@@ -82,18 +82,16 @@ gulp.task('babel', ['lint'], function() {
 	return gulp.src([ paths.framework, paths.app ])
 		.pipe(concat('babelized.js'))
 		.pipe(babel())
-		.pipe(gulp.dest(paths.dist));
-});
-
-gulp.task('concat', ['babel'], function() {
-	return gulp.src([
+		.pipe(addsrc([
 			paths.handlebars,
 			paths.babelPolyphill,
-			paths.babelized
-		])
+			paths.matchesPolyphill
+			]))
 		.pipe(concat('app.js'))
 		.pipe(gulp.dest(paths.dist));
 });
+
+
 
 gulp.task('webserver', function() {
 	return gulp.src('app')
@@ -108,12 +106,14 @@ gulp.task('webserver', function() {
 
 // watch files, transpile if one of them changes
 gulp.task('watch', function() {
-	gulp.watch(paths.framework, ['concat']);
-	gulp.watch(paths.app, ['concat']);
+	gulp.watch(paths.framework, ['babel']);
+	gulp.watch(paths.app, ['babel']);
 });
 
+
+
 // The default task is 'watch'
-gulp.task('default', ['concat', 'webserver', 'watch']);
+gulp.task('default', ['babel', 'webserver', 'watch']);
 
 
 

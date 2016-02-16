@@ -137,7 +137,7 @@
 			var _this = this;
 
 			this.elem.addEventListener(eventName, function(event){
-				if (event.target.matches(selector) && _this.active){
+				if (matchesSelector(event.target, selector) && _this.active){
 					var dataChanger = func(event);
 
 					//passing getDataModel and DOM element to function-changer of DataModel

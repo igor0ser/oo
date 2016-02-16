@@ -10,6 +10,6 @@
     "handlebars": "latest",
     "bootstrap-css-only": "latest",
     "babel-polyfill": "latest",
-    "es-symbol": "latest"
+    "matches-selector": "latest"
   }
 }
