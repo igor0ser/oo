@@ -12,9 +12,14 @@ To run SPA:
 
 	> bower install
 
-4. Start gulp
+4a. To start a project use default gulp task
 
 	> gulp
+
+
+4b. To start tests use next command:
+
+	> gulp test
 
 5. Enjoy.
 

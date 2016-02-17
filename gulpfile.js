@@ -82,10 +82,10 @@ gulp.task('babel', ['lint'], function() {
 	return gulp.src([ paths.framework, paths.app ])
 		.pipe(concat('babelized.js'))
 		.pipe(babel())
-		.pipe(addsrc([
-			paths.handlebars,
+		.pipe(addsrc.prepend([
 			paths.babelPolyphill,
-			paths.matchesPolyphill
+			paths.matchesPolyphill,
+			paths.handlebars
 			]))
 		.pipe(concat('app.js'))
 		.pipe(gulp.dest(paths.dist));
