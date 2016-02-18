@@ -93,7 +93,7 @@ gulp.task('babel', ['lint'], function() {
 
 
 
-gulp.task('webserver', function() {
+gulp.task('webserver', ['babel'], function() {
 	return gulp.src('app')
 		.pipe(webserver({
 			livereload: true,
